@@ -1,7 +1,7 @@
 {
   "name": "ingensec",
   "description": "inGen Security NPM Package",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "homepage": "https://www.ingensec.com",
   "author": "Michael Vergoz",
   "main" : "index.js",
