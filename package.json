@@ -19,7 +19,7 @@
     "prettyjson": "^1.1.3"
   },
   "bin": {
-    "ingensec": "index.js"
+    "ingensec": "./index.js"
   },
   "licenses": [
     {
