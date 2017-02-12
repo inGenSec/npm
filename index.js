@@ -154,7 +154,7 @@ function forever(cmd, module, runner) {
 var foreverSatelliteStart = forever(
   'start',
   'satellite',
-  '--max_old_space_size=150 /application/satellite/bin/ews.js --config=/etc/satellite/config.js'
+  '--max_old_space_size=500 /application/satellite/bin/ews.js --config=/etc/satellite/config.js'
 );
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -236,7 +236,7 @@ function update(software) {
             console.pretty({message: 'Fixing Satellite'});
             try {
               var config = require('/etc/satellite/config.js');
-              config.gateStart = 'node --max_old_space_size=100 /application/gate/src/service.js --config=/etc/gatejs/config.js';
+              config.gateStart = 'node --max_old_space_size=500 /application/gate/src/service.js --config=/etc/gatejs/config.js';
               config.ssl = {
                 key: '%KEY%',
                 cert: '%CERT%',
