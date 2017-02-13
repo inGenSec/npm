@@ -88,9 +88,12 @@ function system() {
   }
 
   /* hack for gate */
-  var lVersion = execSync("grep \"this.version\" /application/gate/src/service.js").toString().split("\n")[0].trim();
-  var pR = /\"([\.0-9\-a-z]+)\"/;
-  r.gate = pR.exec(lVersion)[1];
+  try {
+    var st = fs.statSync('/application/gate/src/service.js');
+    var lVersion = execSync("grep \"this.version\" /application/gate/src/service.js").toString().split("\n")[0].trim();
+    var pR = /\"([\.0-9\-a-z]+)\"/;
+    r.gate = pR.exec(lVersion)[1];
+  } catch(e) {}
 
   try {
     var issue = fs.readFileSync('/etc/issue').toString('utf8').trim().replace(' \\n \\l', '');
