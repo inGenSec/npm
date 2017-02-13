@@ -310,13 +310,13 @@ function update(software) {
          if(code == 0) {
              console.pretty({message: 'Stopping Ultimate'});
              try {
-               var cron = 'su satellite -s /bin/bash -c "forever stop ultimate"';
+               var cron = 'su ultimate -s /bin/bash -c "forever stop ultimate"';
                execSync(cron);
              } catch(e) {}
 
              console.pretty({message: 'Starting Ultimate'});
              try {
-               var cron = 'su satellite -s /bin/bash -c "'+foreverUltimateStart+'"';
+               var cron = 'su ultimate -s /bin/bash -c "'+foreverUltimateStart+'"';
                execSync(cron);
              } catch(e) {}
 

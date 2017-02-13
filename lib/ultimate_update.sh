@@ -11,6 +11,10 @@ echo "Downloading Ultimate"
 curl -sk https://l.ingensec.com/download/$OS/$ARCH/$RELEASE/ultimate -o ultimate.tar.gz
 tar zxf ultimate.tar.gz
 
+echo "Preparing Ultimate"
+cd ultimate
+npm install
+
 echo "Backup old Ultimate"
 cd /application
 mv ultimate ultimate.$BACKUP
