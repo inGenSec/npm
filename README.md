@@ -37,3 +37,7 @@ $ ingensec update ultimate
 - [x] Get manifest inforation
 - [ ] Install Satellite
 - [ ] Install Ultimate
+
+## Links
+- Get more informations about inGen Security at https://www.ingensec.com/
+
