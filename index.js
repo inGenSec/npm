@@ -138,8 +138,8 @@ function getBackupName() {
 function forever(cmd, module, runner) {
   if(cmd == 'start') {
     var f = 'forever -a -l /application/data/logs/forever.log '+
-      '-o /application/data/logs/satellite.log '+
-      '-e /application/data/logs/satellite-error.log '+
+      '-o /application/data/logs/'+module+'.log '+
+      '-e /application/data/logs/'+module+'-error.log '+
       '--uid '+module+' '+
       cmd+' '+
       runner;
