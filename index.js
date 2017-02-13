@@ -304,13 +304,13 @@ function update(software) {
        ls.on('close', (code) => {
 
          /* fix reboot starter */
-         var cron = 'echo "@reboot '+foreverUltimateStart+'" | su satellite -s /bin/bash -c "crontab -"';
+         var cron = 'echo "@reboot '+foreverUltimateStart+'" | su ultimate -s /bin/bash -c "crontab -"';
          execSync(cron);
 
          if(code == 0) {
              console.pretty({message: 'Stopping Ultimate'});
              try {
-               var cron = 'su satellite -s /bin/bash -c "forever stop satellite"';
+               var cron = 'su satellite -s /bin/bash -c "forever stop ultimate"';
                execSync(cron);
              } catch(e) {}
 
