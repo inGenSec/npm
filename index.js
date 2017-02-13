@@ -84,6 +84,7 @@ function system() {
     ultimate: getVersion('ultimate'),
     satellite: getVersion('satellite'),
     gateWaf: getVersion('gateWaf'),
+    ultimate: getVersion('ultimate'),
   }
 
   /* hack for gate */
@@ -156,6 +157,13 @@ var foreverSatelliteStart = forever(
   'satellite',
   '--max_old_space_size=2000 /application/satellite/bin/ews.js --config=/etc/satellite/config.js'
 );
+
+var foreverUltimateStart = forever(
+  'start',
+  'ultimate',
+  '--max_old_space_size=2000 /application/ultimate/index.js /etc/ultimate'
+);
+
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
@@ -261,6 +269,64 @@ function update(software) {
 
     return;
   }
+
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   * Ulitmate
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+   else if(software == 'ultimate') {
+
+     getManifest(info, (result) => {
+       var needUpdate = false;
+
+       if(result.ultimate.version != info.ultimate) {
+         needUpdate = true;
+       }
+
+       if(needUpdate == false) {
+         console.pretty({message: 'Your system is up to date'});
+         process.exit(0)
+       }
+
+       var args = [
+         __dirname+'/lib/ultimate_update.sh',
+         info.system,
+         info.arch,
+         info.release,
+         backupFile
+       ];
+
+       console.pretty({message: 'Updating your Ultimate system'});
+       const spawn = child_process.spawn;
+       const ls = spawn('sh', args, { stdio: [0,1,2] });
+       ls.on('close', (code) => {
+
+         /* fix reboot starter */
+         var cron = 'echo "@reboot '+foreverUltimateStart+'" | su satellite -s /bin/bash -c "crontab -"';
+         execSync(cron);
+
+         if(code == 0) {
+             console.pretty({message: 'Stopping Ultimate'});
+             try {
+               var cron = 'su satellite -s /bin/bash -c "forever stop satellite"';
+               execSync(cron);
+             } catch(e) {}
+
+             console.pretty({message: 'Starting Ultimate'});
+             try {
+               var cron = 'su satellite -s /bin/bash -c "'+foreverUltimateStart+'"';
+               execSync(cron);
+             } catch(e) {}
+
+             console.pretty({message: 'Your system is now up to date'});
+             process.exit(0);
+         }
+
+         console.log(`Update terminated with error code ${code}`);
+       });
+     });
+
+     return;
+   }
 
   console.pretty({error: 'Please specify ultimate or satellite'});
 }
