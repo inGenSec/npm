@@ -2,6 +2,18 @@
 
 # inGen Security WAF On-Premises :+1:
 
+## Requirement
+- Ubuntu 16.04.x based on 64 bits
+- NodeJS Version 4.x
+- 2Go per Core on Ultimate
+- 2Go + 1Go/core on Satellite
+
+## Preparing NodeJS
+```bash
+$ curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+$ sudo apt-get install -y nodejs
+```
+
 ## Installation
 ```bash
 $ npm install -g ingensec
