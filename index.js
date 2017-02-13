@@ -154,7 +154,7 @@ function forever(cmd, module, runner) {
 var foreverSatelliteStart = forever(
   'start',
   'satellite',
-  '--max_old_space_size=500 /application/satellite/bin/ews.js --config=/etc/satellite/config.js'
+  '--max_old_space_size=2000 /application/satellite/bin/ews.js --config=/etc/satellite/config.js'
 );
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
