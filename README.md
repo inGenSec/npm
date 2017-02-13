@@ -10,34 +10,39 @@
 
 ## Preparing NodeJS
 ```bash
-$ curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-$ sudo apt-get install -y nodejs
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+sudo apt-get install -y nodejs
 ```
 
 ## Installation
 ```bash
-$ npm install -g ingensec
+npm install -g ingensec
 ```
 
 ## Examples
 
+### Installing Ultimate
+```bash
+npm update -g
+ingensec install ultimate
+```
+
+### Installing Satellite
+```bash
+npm update -g
+ingensec install satellite
+```
+
 ### Updating Satellite
 ```bash
-$ npm update -g 
-$ ingensec update satellite
+npm update -g
+ingensec update satellite
 ```
 ### Updating Ultimate
 ```bash
-$ npm update -g 
-$ ingensec update ultimate
+npm update -g
+ingensec update ultimate
 ```
-## Roadmap
-- [x] Update Satellite
-- [x] Update Ultimate
-- [x] Get manifest inforation
-- [ ] Install Satellite
-- [ ] Install Ultimate
 
 ## Links
 - Get more informations about inGen Security at https://www.ingensec.com/
-

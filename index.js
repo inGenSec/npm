@@ -170,9 +170,125 @@ var foreverUltimateStart = forever(
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ *
+ * Software installation
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 function install(software) {
+  var backupFile = getBackupName();
+  var info = system();
 
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   * Satellite
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+  if(software == 'satellite') {
 
+    getManifest(info, (result) => {
+      var needUpdate = false;
+      if(
+        info.gate != null ||
+        info.gateWaf != null ||
+        info.satellite != null
+      ) {
+        console.pretty({error: ['inGen WAF Satellite found on this machine', 'Installation aborted']});
+        process.exit(0)
+      }
+
+      var args = [
+        __dirname+'/lib/satellite_install.sh',
+        info.system,
+        info.arch,
+        info.release
+      ];
+
+      console.pretty({message: 'Running Stage One Satellite system'});
+      const spawn = child_process.spawn;
+      const install = spawn('bash', args, { stdio: [0,1,2] });
+      install.on('close', (code) => {;
+        if(code == 0) {
+            console.pretty({message: 'Stage One done'});
+
+            var args = [
+              __dirname+'/lib/satellite_install.js',
+              info.system,
+              info.arch,
+              info.release
+            ];
+
+            console.pretty({message: 'Running Stage Two Satellite system'});
+
+            const stageTwo = spawn('node', args, { stdio: [0,1,2] });
+            stageTwo.on('close', (code) => {;
+              if(code == 0) {
+                  console.pretty({message: 'Stage Two done'});
+                  process.exit(0);
+              }
+
+              console.log(`Installation terminated with error code ${code}`);
+            });
+            return;
+        }
+        console.log(`Installation terminated with error code ${code}`);
+      });
+    });
+
+    return;
+  }
+
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+   * Ultimate
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+   else if(software == 'ultimate') {
+     getManifest(info, (result) => {
+
+       if(info.ultimate != null) {
+         console.pretty({error: ['inGen WAF Ultimate found on this machine', 'Installation aborted']});
+         process.exit(0)
+       }
+
+       var args = [
+         __dirname+'/lib/ultimate_install.sh',
+         info.system,
+         info.arch,
+         info.release
+       ];
+
+       console.pretty({message: 'Running Stage One Ultimate system'});
+       const spawn = child_process.spawn;
+       const install = spawn('bash', args, { stdio: [0,1,2] });
+       install.on('close', (code) => {;
+         if(code == 0) {
+             console.pretty({message: 'Stage One done'});
+
+             var args = [
+               __dirname+'/lib/ultimate_install.js',
+               info.system,
+               info.arch,
+               info.release
+             ];
+
+             console.pretty({message: 'Running Stage Two Ultimate system'});
+
+             const stageTwo = spawn('node', args, { stdio: [0,1,2] });
+             stageTwo.on('close', (code) => {;
+               if(code == 0) {
+                   console.pretty({message: 'Stage Two done'});
+                   process.exit(0);
+               }
+
+               console.log(`Installation terminated with error code ${code}`);
+             });
+             return;
+         }
+         console.log(`Installation terminated with error code ${code}`);
+       });
+     });
+
+     return;
+   }
+
+  console.pretty({error: 'Please specify ultimate or satellite'});
 }
 
 function remove() {
@@ -199,6 +315,14 @@ function update(software) {
 
     getManifest(info, (result) => {
       var needUpdate = false;
+      if(
+        info.gate == null ||
+        info.gateWaf == null ||
+        info.satellite == null
+      ) {
+        console.pretty({error: 'No inGen WAF Satellite found on this machine'});
+        process.exit(0)
+      }
 
       if(
         result.gate.version != info.gate ||
@@ -274,11 +398,16 @@ function update(software) {
   }
 
   /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-   * Ulitmate
+   * Ultimate
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
    else if(software == 'ultimate') {
 
      getManifest(info, (result) => {
+       if(info.ultimate == null) {
+         console.pretty({error: 'No inGen WAF Ultimate found on this machine'});
+         process.exit(0)
+       }
+
        var needUpdate = false;
 
        if(result.ultimate.version != info.ultimate) {
@@ -349,10 +478,12 @@ program
   .description('Install the WAF')
   .action(install);
 
+/*
 program
   .command('remove <software>')
   .description('Remove the WAF')
   .action(remove);
+*/
 
 program
   .command('show')
@@ -377,7 +508,7 @@ program.on('--help', function(){
   console.log('  Examples:');
   console.log('');
   console.log('    $ haswitch install satellite        Install new WAF Satellite');
-  console.log('    $ haswitch remove satellite         Remove new WAF Satellite');
+  //console.log('    $ haswitch remove satellite         Remove new WAF Satellite');
   console.log('    $ haswitch install ultimate         Install new WAF Ulitmate');
   console.log('    $ haswitch update satellite         Update new WAF Satellite');
   console.log('');
